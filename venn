@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venn Diagram with venn.js</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://rawgit.com/benfred/venn.js/v0.2.20/venn.js"></script>
+</head>
+<body>
+
+<h1>Venn Diagram with venn.js</h1>
+
+<form id="itemForm">
+    <label for="itemName">Item Name:</label>
+    <input type="text" id="itemName" required>
+
+    <label for="categories">Categories:</label>
+    <select id="categories" multiple>
+        <option value="Category1">Category 1</option>
+        <option value="Category2">Category 2</option>
+        <option value="Category3">Category 3</option>
+        <option value="Category4">Category 4</option>
+        <option value="Category5">Category 5</option>
+    </select>
+
+    <button type="button" onclick="addItem()">Add Item</button>
+</form>
+
+<div id="vennDiagram"></div>
+
+<script>
+    var sets = [
+        { sets: ['Category1'], size: 10 },
+        { sets: ['Category2'], size: 10 },
+        { sets: ['Category3'], size: 10 },
+        { sets: ['Category4'], size: 10 },
+        { sets: ['Category5'], size: 10 },
+        { sets: ['Category1', 'Category2'], size: 2 },
+        { sets: ['Category1', 'Category3'], size: 2 },
+        { sets: ['Category1', 'Category4'], size: 2 },
+        { sets: ['Category1', 'Category5'], size: 2 },
+        { sets: ['Category2', 'Category3'], size: 2 },
+        { sets: ['Category2', 'Category4'], size: 2 },
+        { sets: ['Category2', 'Category5'], size: 2 },
+        { sets: ['Category3', 'Category4'], size: 2 },
+        { sets: ['Category3', 'Category5'], size: 2 },
+        { sets: ['Category4', 'Category5'], size: 2 },
+        { sets: ['Category1', 'Category2', 'Category3'], size: 1 },
+        { sets: ['Category1', 'Category2', 'Category4'], size: 1 },
+        { sets: ['Category1', 'Category2', 'Category5'], size: 1 },
+        { sets: ['Category1', 'Category3', 'Category4'], size: 1 },
+        { sets: ['Category1', 'Category3', 'Category5'], size: 1 },
+        { sets: ['Category1', 'Category4', 'Category5'], size: 1 },
+        { sets: ['Category2', 'Category3', 'Category4'], size: 1 },
+        { sets: ['Category2', 'Category3', 'Category5'], size: 1 },
+        { sets: ['Category2', 'Category4', 'Category5'], size: 1 },
+        { sets: ['Category3', 'Category4', 'Category5'], size: 1 },
+        { sets: ['Category1', 'Category2', 'Category3', 'Category4'], size: 0.5 },
+        { sets: ['Category1', 'Category2', 'Category3', 'Category5'], size: 0.5 },
+        { sets: ['Category1', 'Category2', 'Category4', 'Category5'], size: 0.5 },
+        { sets: ['Category1', 'Category3', 'Category4', 'Category5'], size: 0.5 },
+        { sets: ['Category2', 'Category3', 'Category4', 'Category5'], size: 0.5 },
+        { sets: ['Category1', 'Category2', 'Category3', 'Category4', 'Category5'], size: 0.25 }
+    ];
+
+    var chart = venn.VennDiagram()
+        .width(500)
+        .height(500);
+
+    d3.select("#vennDiagram").datum(sets).call(chart);
+
+    function addItem() {
+        var itemName = document.getElementById("itemName").value;
+        var selectedCategories = Array.from(document.getElementById("categories").selectedOptions, option => option.value);
+
+        var newItem = { sets: selectedCategories, size: 10, itemName: itemName };
+        sets.push(newItem);
+
+        chart.width(500).height(500);
+        d3.select("#vennDiagram").datum(sets).call(chart);
+
+        // Clear the form fields
+        document.getElementById("itemName").value = "";
+        document.getElementById("categories").selectedIndex = -1;
+    }
+</script>
+
+</body>
+</html>
